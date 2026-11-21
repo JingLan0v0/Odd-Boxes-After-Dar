@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#faf8f2">
+  <title>今晚的箱子不对劲</title>
+  <link rel="stylesheet" href="./style.css">
+  <script defer src="./levels.js"></script>
+  <script defer src="./sprites.js"></script>
+  <script defer src="./game.js"></script>
+</head>
+<body>
+  <main class="game showing-menu showing-home">
+    <header class="masthead">
+      <canvas id="stamp" class="stamp pixel-art" aria-hidden="true"></canvas>
+      <h1>今晚的箱子<span>不对劲</span></h1>
+      <h1 class="menu-logo saves-art"><img class="pixel-art" src="./menu-title.png" width="174" height="31" alt="今晚的箱子不对劲"></h1>
+    </header>
+    <section id="start-menu" class="station" aria-label="主菜单">
+      <h1 class="menu-logo"><img class="pixel-art" src="./menu-title.png" width="174" height="31" alt="今晚的箱子不对劲"></h1>
+      <div class="menu-options">
+        <div class="menu-actions">
+          <button type="button" id="start" class="primary-button"><img class="pixel-art" src="./menu-start.png" width="72" height="22" alt="开始游戏"></button>
+          <button type="button" id="continue" class="secondary-button"><img class="pixel-art" src="./menu-continue.png" width="72" height="22" alt="继续游戏"></button>
+          <button type="button" id="open-saves" class="secondary-button"><img class="pixel-art" src="./menu-load.png" width="72" height="22" alt="读取存档"></button>
+          <button type="button" id="quit" class="secondary-button"><img class="pixel-art" src="./menu-quit.png" width="72" height="22" alt="退出游戏"></button>
+        </div>
+        <p id="menu-feedback" class="menu-feedback" role="status" hidden>还没有可继续的进度。</p>
+      </div>
+    </section>
+    <section id="saves-screen" class="station menu-panel" aria-labelledby="saves-title" hidden>
+      <h2 id="saves-title" tabindex="-1">
+        <span class="saves-text">选择存档</span>
+        <img class="saves-art pixel-art" src="./save-title.png" alt="选择存档">
+      </h2>
+      <p id="saves-feedback" class="menu-feedback" role="status"></p>
+      <div id="save-list" class="save-list"></div>
+      <div id="overwrite" class="overwrite" hidden>
+        <p id="overwrite-message"></p>
+        <div class="overwrite-actions">
+          <button type="button" id="cancel-overwrite" class="secondary-button">取消</button>
+          <button type="button" id="confirm-overwrite" class="primary-button">确认覆盖</button>
+        </div>
+      </div>
+      <button type="button" id="back-from-saves" class="secondary-button">
+        <span class="saves-text">返回主菜单</span>
+        <img class="saves-art pixel-art" src="./save-back.png" alt="返回主菜单">
+      </button>
+    </section>
+    <section id="quit-screen" class="station menu-panel" aria-labelledby="quit-title" hidden>
+      <h2 id="quit-title" tabindex="-1">已退出游戏</h2>
+      <p id="quit-feedback" class="menu-feedback"></p>
+      <button type="button" id="back-from-quit" class="secondary-button">返回主菜单</button>
+    </section>
+    <section id="select-screen" aria-labelledby="select-title" hidden>
+      <h1 class="play-logo"><img class="pixel-art" src="./menu-title.png" width="174" height="31" alt="今晚的箱子不对劲"></h1>
+      <div class="station select-panel">
+        <div class="select-heading">
+          <h2 id="select-title" tabindex="-1">选择关卡</h2>
+          <span id="select-progress" class="profile-tag"></span>
+        </div>
+        <p id="select-hint" class="select-hint" role="status">左右拖动货单选关。</p>
+        <div id="level-rail" class="level-rail" role="group" aria-label="关卡货单" tabindex="0"></div>
+        <div class="select-navigation">
+          <button type="button" id="prev-card" class="menu-button" aria-label="上一张货单"><img class="pixel-art" src="./level-arrow.png" width="16" height="16" alt=""></button>
+          <span id="card-position" aria-live="polite"></span>
+          <button type="button" id="next-card" class="menu-button" aria-label="下一张货单"><img class="pixel-art" src="./level-arrow.png" width="16" height="16" alt=""></button>
+        </div>
+        <p id="storage-warning" class="menu-feedback" role="status" hidden>浏览器无法保存，进度仅保留在当前页面。</p>
+        <button type="button" id="back-from-select" class="secondary-button">返回存档</button>
+      </div>
+    </section>
+    <div id="play-screen" hidden>
+      <h1 class="play-logo"><img class="pixel-art" src="./menu-title.png" width="174" height="31" alt="今晚的箱子不对劲"></h1>
+      <section class="station" aria-labelledby="level-title">
+        <div class="station-header">
+          <span id="playing-profile" class="profile-tag" role="status"></span>
+          <button type="button" id="save-game" class="menu-button" aria-label="保存存档"><img class="pixel-art" src="./level-save.png" width="38" height="22" alt="保存"></button>
+          <button type="button" id="open-menu" class="menu-button"><img class="pixel-art" src="./level-menu.png" width="38" height="22" alt="菜单"></button>
+        </div>
+        <div class="station-intro">
+          <div class="level-heading">
+            <h2 id="level-title" tabindex="-1"></h2>
+            <span id="cargo" class="cargo"></span>
+          </div>
+          <p id="message" aria-live="polite"></p>
+        </div>
+        <div class="board-stage">
+          <div id="board" class="board" aria-label="棋盘"></div>
+          <section id="receipt" class="receipt-layer" aria-labelledby="receipt-title" hidden>
+            <div class="receipt">
+              <div class="receipt-emblem" aria-hidden="true">
+                <canvas id="receipt-box" class="pixel-art"></canvas>
+                <span class="receipt-check">✓</span>
+              </div>
+              <div class="receipt-copy" role="status">
+                <h2 id="receipt-title"></h2>
+                <p id="receipt-detail"></p>
+              </div>
+              <button type="button" id="next" class="primary-button"></button>
+            </div>
+          </section>
+        </div>
+      </section>
+      <div class="controls" aria-label="游戏控制">
+        <button type="button" id="undo" class="utility"><img class="pixel-art" src="./level-undo.png" width="38" height="22" alt="撤回"></button>
+        <div class="dpad" aria-label="移动">
+          <button type="button" class="up" data-direction="up" aria-label="向上"><img class="pixel-art" src="./level-arrow.png" width="16" height="16" alt=""></button>
+          <button type="button" class="left" data-direction="left" aria-label="向左"><img class="pixel-art" src="./level-arrow.png" width="16" height="16" alt=""></button>
+          <button type="button" class="down" data-direction="down" aria-label="向下"><img class="pixel-art" src="./level-arrow.png" width="16" height="16" alt=""></button>
+          <button type="button" class="right" data-direction="right" aria-label="向右"><img class="pixel-art" src="./level-arrow.png" width="16" height="16" alt=""></button>
+        </div>
+        <button type="button" id="restart" class="utility"><img class="pixel-art" src="./level-restart.png" width="38" height="22" alt="重开"></button>
+      </div>
+    </div>
+  </main>
+</body>
+</html>
