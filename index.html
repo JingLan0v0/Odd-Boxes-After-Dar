@@ -8,6 +8,8 @@
   <link rel="stylesheet" href="./style.css">
   <script defer src="./levels.js"></script>
   <script defer src="./sprites.js"></script>
+  <script defer src="./night-maps.js"></script>
+  <script defer src="./night-shift.js"></script>
   <script defer src="./game.js"></script>
 </head>
 <body>
@@ -15,76 +17,88 @@
     <header class="masthead">
       <canvas id="stamp" class="stamp pixel-art" aria-hidden="true"></canvas>
       <h1>今晚的箱子<span>不对劲</span></h1>
-      <h1 class="menu-logo saves-art"><img class="pixel-art" src="./menu-title.png" width="174" height="31" alt="今晚的箱子不对劲"></h1>
     </header>
     <section id="start-menu" class="station" aria-label="主菜单">
       <h1 class="menu-logo"><img class="pixel-art" src="./menu-title.png" width="174" height="31" alt="今晚的箱子不对劲"></h1>
       <div class="menu-options">
         <div class="menu-actions">
-          <button type="button" id="start" class="primary-button"><img class="pixel-art" src="./menu-start.png" width="72" height="22" alt="开始游戏"></button>
+          <button type="button" id="open-night" class="primary-button"><img class="pixel-art" src="./menu-night.png" width="108" height="30" alt="开始肉鸽"></button>
+          <button type="button" id="start" class="secondary-button"><img class="pixel-art" src="./menu-tutorial.png" width="72" height="22" alt="开始教程"></button>
           <button type="button" id="continue" class="secondary-button"><img class="pixel-art" src="./menu-continue.png" width="72" height="22" alt="继续游戏"></button>
-          <button type="button" id="open-saves" class="secondary-button"><img class="pixel-art" src="./menu-load.png" width="72" height="22" alt="读取存档"></button>
           <button type="button" id="quit" class="secondary-button"><img class="pixel-art" src="./menu-quit.png" width="72" height="22" alt="退出游戏"></button>
         </div>
         <p id="menu-feedback" class="menu-feedback" role="status" hidden>还没有可继续的进度。</p>
       </div>
     </section>
-    <section id="saves-screen" class="station menu-panel" aria-labelledby="saves-title" hidden>
-      <h2 id="saves-title" tabindex="-1">
-        <span class="saves-text">选择存档</span>
-        <img class="saves-art pixel-art" src="./save-title.png" alt="选择存档">
-      </h2>
-      <p id="saves-feedback" class="menu-feedback" role="status"></p>
-      <div id="save-list" class="save-list"></div>
-      <div id="overwrite" class="overwrite" hidden>
-        <p id="overwrite-message"></p>
-        <div class="overwrite-actions">
-          <button type="button" id="cancel-overwrite" class="secondary-button">取消</button>
-          <button type="button" id="confirm-overwrite" class="primary-button">确认覆盖</button>
-        </div>
-      </div>
-      <button type="button" id="back-from-saves" class="secondary-button">
-        <span class="saves-text">返回主菜单</span>
-        <img class="saves-art pixel-art" src="./save-back.png" alt="返回主菜单">
-      </button>
+    <section id="characters-screen" class="station menu-panel" aria-labelledby="characters-title" hidden>
+      <h2 id="characters-title" tabindex="-1">选择角色</h2>
+      <p id="characters-feedback" class="menu-feedback" role="status"></p>
+      <div id="character-list" class="character-list"></div>
+      <button type="button" id="new-character" class="primary-button" hidden>新建角色</button>
+      <form id="character-form" class="character-form" hidden>
+        <label for="character-name">角色名字</label>
+        <input type="text" id="character-name" maxlength="16" autocomplete="off" required placeholder="例如 玩家A">
+        <button type="submit" class="primary-button">创建并开始</button>
+      </form>
+      <button type="button" id="back-from-characters" class="secondary-button">返回主菜单</button>
+      <dialog id="character-restart" aria-labelledby="character-restart-title">
+        <form method="dialog">
+          <h2 id="character-restart-title">选择游玩方式</h2>
+          <p id="character-restart-message"></p>
+          <div class="night-dialog-actions character-restart-actions">
+            <button type="submit" class="secondary-button" value="resume" autofocus>继续该角色</button>
+            <button type="submit" class="primary-button" value="start">开始新一轮</button>
+            <button type="submit" class="secondary-button" value="cancel">取消</button>
+          </div>
+        </form>
+      </dialog>
     </section>
     <section id="quit-screen" class="station menu-panel" aria-labelledby="quit-title" hidden>
       <h2 id="quit-title" tabindex="-1">已退出游戏</h2>
       <p id="quit-feedback" class="menu-feedback"></p>
       <button type="button" id="back-from-quit" class="secondary-button">返回主菜单</button>
     </section>
-    <section id="select-screen" aria-labelledby="select-title" hidden>
-      <h1 class="play-logo"><img class="pixel-art" src="./menu-title.png" width="174" height="31" alt="今晚的箱子不对劲"></h1>
-      <div class="station select-panel">
-        <div class="select-heading">
-          <h2 id="select-title" tabindex="-1">选择关卡</h2>
-          <span id="select-progress" class="profile-tag"></span>
-        </div>
-        <p id="select-hint" class="select-hint" role="status">左右拖动货单选关。</p>
-        <div id="level-rail" class="level-rail" role="group" aria-label="关卡货单" tabindex="0"></div>
-        <div class="select-navigation">
-          <button type="button" id="prev-card" class="menu-button" aria-label="上一张货单"><img class="pixel-art" src="./level-arrow.png" width="16" height="16" alt=""></button>
-          <span id="card-position" aria-live="polite"></span>
-          <button type="button" id="next-card" class="menu-button" aria-label="下一张货单"><img class="pixel-art" src="./level-arrow.png" width="16" height="16" alt=""></button>
-        </div>
-        <p id="storage-warning" class="menu-feedback" role="status" hidden>浏览器无法保存，进度仅保留在当前页面。</p>
-        <button type="button" id="back-from-select" class="secondary-button">返回存档</button>
-      </div>
-    </section>
     <div id="play-screen" hidden>
       <h1 class="play-logo"><img class="pixel-art" src="./menu-title.png" width="174" height="31" alt="今晚的箱子不对劲"></h1>
       <section class="station" aria-labelledby="level-title">
         <div class="station-header">
-          <span id="playing-profile" class="profile-tag" role="status"></span>
-          <button type="button" id="save-game" class="menu-button" aria-label="保存存档"><img class="pixel-art" src="./level-save.png" width="38" height="22" alt="保存"></button>
+          <div class="playing-profile">
+            <span id="playing-profile" class="profile-tag" role="status"></span>
+            <span id="night-best" class="profile-tag" hidden>最高 0 层</span>
+          </div>
+          <span id="night-steps" class="night-steps" role="status" hidden>剩余 <strong>0</strong> 步</span>
+          <button type="button" id="open-night-rules" class="menu-button" aria-haspopup="dialog" aria-controls="night-rules" hidden>规则</button>
           <button type="button" id="open-menu" class="menu-button"><img class="pixel-art" src="./level-menu.png" width="38" height="22" alt="菜单"></button>
         </div>
         <div class="station-intro">
           <div class="level-heading">
             <h2 id="level-title" tabindex="-1"></h2>
+            <span id="night-health" class="night-health" role="status" hidden>
+              <span class="night-hearts" aria-hidden="true"><span>♥</span><span>♥</span><span>♥</span></span>
+              <span class="night-health-label">生命 3/3</span>
+            </span>
             <span id="cargo" class="cargo"></span>
           </div>
           <p id="message" aria-live="polite"></p>
+        </div>
+        <div id="night-tools" class="night-tools" hidden>
+          <div id="night-machine" class="night-machine">
+            <div id="night-reels" class="night-reels" role="group" aria-label="三个转轮等待摇动">
+              <div class="night-reel" aria-hidden="true"><div class="night-reel-strip"></div></div>
+              <div class="night-reel" aria-hidden="true"><div class="night-reel-strip"></div></div>
+              <div class="night-reel" aria-hidden="true"><div class="night-reel-strip"></div></div>
+            </div>
+            <button type="button" id="night-spin">
+              <span class="night-lever" aria-hidden="true"></span>
+              <span class="night-spin-label">摇转轮</span>
+            </button>
+          </div>
+          <p id="scout-status" role="status"></p>
+          <div class="night-supply" aria-label="夜班道具">
+            <button type="button" id="night-cheese"><strong>奶酪</strong><small>在脚下放诱饵</small></button>
+            <button type="button" id="night-bell"><strong>停机铃</strong><small>取消本回合追击</small></button>
+            <span id="night-coins" class="night-coins" role="status"><strong>0</strong> 金币</span>
+          </div>
         </div>
         <div class="board-stage">
           <div id="board" class="board" aria-label="棋盘"></div>
@@ -99,20 +113,102 @@
                 <p id="receipt-detail"></p>
               </div>
               <button type="button" id="next" class="primary-button"></button>
+              <button type="button" id="night-recover" class="secondary-button" hidden>返工一步</button>
+            </div>
+          </section>
+          <section id="night-chest" class="receipt-layer" aria-labelledby="night-chest-title" hidden>
+            <div class="receipt night-chest-card">
+              <h2 id="night-chest-title">三宝箱！</h2>
+              <p>任选一件道具</p>
+              <div class="night-chest-options">
+                <button type="button" class="primary-button" data-chest-item="cheese">奶酪</button>
+                <button type="button" class="primary-button" data-chest-item="bell">停机铃</button>
+                <button type="button" class="primary-button" data-chest-item="rewind">返工券</button>
+              </div>
             </div>
           </section>
         </div>
       </section>
       <div class="controls" aria-label="游戏控制">
-        <button type="button" id="undo" class="utility"><img class="pixel-art" src="./level-undo.png" width="38" height="22" alt="撤回"></button>
+        <button type="button" id="undo" class="utility"><img class="pixel-art" src="./level-undo.png" width="38" height="22" alt="撤回"><span id="night-rewinds" hidden></span></button>
         <div class="dpad" aria-label="移动">
           <button type="button" class="up" data-direction="up" aria-label="向上"><img class="pixel-art" src="./level-arrow.png" width="16" height="16" alt=""></button>
           <button type="button" class="left" data-direction="left" aria-label="向左"><img class="pixel-art" src="./level-arrow.png" width="16" height="16" alt=""></button>
           <button type="button" class="down" data-direction="down" aria-label="向下"><img class="pixel-art" src="./level-arrow.png" width="16" height="16" alt=""></button>
           <button type="button" class="right" data-direction="right" aria-label="向右"><img class="pixel-art" src="./level-arrow.png" width="16" height="16" alt=""></button>
         </div>
-        <button type="button" id="restart" class="utility"><img class="pixel-art" src="./level-restart.png" width="38" height="22" alt="重开"></button>
+        <button type="button" id="restart" class="utility"><img class="pixel-art" src="./level-restart.png" width="38" height="22" alt="重开"><span id="night-restart-label" hidden>新一轮</span></button>
       </div>
+      <dialog id="night-restart" aria-labelledby="night-restart-title">
+        <form method="dialog">
+          <h2 id="night-restart-title">本轮结算</h2>
+          <div class="night-summary-scores">
+            <span>本轮到达 <strong id="night-final-floor"></strong></span>
+            <span>个人最高 <strong id="night-final-best"></strong></span>
+          </div>
+          <p id="night-final-reason"></p>
+          <div class="night-dialog-actions">
+            <button type="submit" id="night-summary-cancel" class="secondary-button" value="cancel">继续游戏</button>
+            <button type="submit" id="night-summary-menu" class="secondary-button" value="menu">返回主菜单</button>
+            <button type="submit" id="night-summary-rewind" class="secondary-button" value="rewind" hidden>返工一步</button>
+            <button type="submit" id="night-summary-restart" class="primary-button" value="restart">再开一轮</button>
+          </div>
+        </form>
+      </dialog>
+      <dialog id="night-shop" aria-labelledby="night-shop-title">
+        <h2 id="night-shop-title"><img class="pixel-art" src="./night-shop-title.png" width="210" height="42" alt="夜班补给站"></h2>
+        <p id="night-shop-balance" role="status">
+          <canvas class="night-shop-coin pixel-art" aria-hidden="true"></canvas>
+          <canvas class="night-shop-coin-count pixel-art" aria-hidden="true"></canvas>
+          <span class="night-shop-balance-text">余额 0 金币</span>
+        </p>
+        <div class="night-shop-stock">
+          <button type="button" class="secondary-button" data-shop-item="cheese"><span class="night-shop-item">奶酪</span><strong></strong></button>
+          <button type="button" class="secondary-button" data-shop-item="bell"><span class="night-shop-item">停机铃</span><strong></strong></button>
+          <button type="button" class="secondary-button" data-shop-item="rewind"><span class="night-shop-item">返工券</span><strong></strong></button>
+        </div>
+        <form method="dialog" class="night-dialog-actions">
+          <button type="submit" class="secondary-button" value="cancel">返回本层</button>
+          <button type="submit" class="primary-button" value="advance">去下一层</button>
+        </form>
+      </dialog>
+      <dialog id="night-rules" aria-labelledby="night-rules-title">
+        <div class="night-rules-shade">
+          <section class="night-rules-panel">
+            <header class="night-rules-heading">
+              <h2 id="night-rules-title">夜班转轮规则</h2>
+              <form method="dialog">
+                <button type="submit" class="menu-button" autofocus>关闭</button>
+              </form>
+            </header>
+            <div class="night-rules-content" role="region" aria-label="详细规则" tabindex="0">
+              <p>每回合摇一次，基础 3 步。走路或推箱各算 1 步，撞墙不扣步数。用完步数后自动结算，走过一步也可以提前结束。</p>
+              <table class="night-rule-table" aria-label="转轮图案效果">
+                <thead><tr><th scope="col">图案</th><th scope="col">散牌</th><th scope="col">三连</th></tr></thead>
+                <tbody>
+                  <tr><th scope="row" data-rule-face="boots">靴子</th><td>总计 +1 步</td><td>共 9 步</td></tr>
+                  <tr><th scope="row" data-rule-face="broken">破靴子</th><td>总计 −1 步</td><td>只剩 1 步</td></tr>
+                  <tr><th scope="row" data-rule-face="cheese">奶酪</th><td>—</td><td>拿 3 块</td></tr>
+                  <tr><th scope="row" data-rule-face="bell">停机铃</th><td>—</td><td>拿 3 个</td></tr>
+                  <tr><th scope="row" data-rule-face="rewind">返工券</th><td>—</td><td>库存不变</td></tr>
+                  <tr><th scope="row" data-rule-face="scout">巡箱鼠</th><td>每个 +1 格</td><td>最多走 4 格</td></tr>
+                  <tr><th scope="row" data-rule-face="chest">宝箱</th><td>—</td><td>自选 1 件道具</td></tr>
+                </tbody>
+              </table>
+              <p>开局带 1 块奶酪、1 个停机铃和 1 张返工券。散牌不发道具。额外道具来自三连奖励或三宝箱。散牌的同类靴子各算一次。</p>
+              <ul>
+                <li>巡箱鼠回合末基础走 1 格，可以通过打开的木门。只要有路通往未送达的箱子，它就会优先追箱。没有通往箱子的路时，它会攻击这回合能咬到的兔子。被咬扣 1 点生命。</li>
+                <li>兔子每轮有 3 点生命，跨房间保留，归零时本轮结束。</li>
+                <li>箱子全被偷走时本轮结束。只要还有箱子，把剩下的全部送达就能上楼。</li>
+                <li>每个箱子首次结算送达得 2 金币。前两回合各走至少两步可各得 1 金币，五回合且 15 步以内通关另得 1 金币。</li>
+                <li>每通关五层开放一次商店，每种道具每站限购一件。</li>
+                <li>奶酪放在脚下引开鼠。停机铃取消本回合的追击。</li>
+                <li>返工券撤回一步，沿用这一摇的结果，已用道具不退。</li>
+              </ul>
+            </div>
+          </section>
+        </div>
+      </dialog>
     </div>
   </main>
 </body>

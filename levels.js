@@ -8,8 +8,8 @@ const LEVELS = [
     title: "第一单 · 普通箱",
     titleArt: "./level-title-1.png",
     firstMove: "right",
-    hint: "点右方向键，把箱子推到发光格。",
-    success: "签收！下一单到了。",
+    hint: "点右方向键或按键盘 →，把普通箱推到发光格。",
+    success: "第一课完成 · 普通箱",
     map: [
       "#######",
       "#.....#",
@@ -21,9 +21,9 @@ const LEVELS = [
   {
     title: "第二单 · 弹簧箱",
     titleArt: "./level-title-2.png",
-    hint: "还是把箱子送到发光格。推一下试试。",
-    reveal: "它会多跳一格！绕到另一侧，换个方向推。",
-    success: "签收！这次它跳对了。",
+    hint: "向右推一下弹簧箱，看看它会走几格。",
+    reveal: "弹簧箱通常跳两格。第二格被挡住时，只移动一格。",
+    success: "第二课完成 · 弹簧箱",
     map: [
       "########",
       "#......#",
@@ -37,9 +37,9 @@ const LEVELS = [
     title: "第三单 · 双胞胎箱",
     titleArt: "./level-title-3.png",
     featuredBox: "twin",
-    hint: "先给双胞胎箱腾条路。",
+    hint: "推任意一个蓝色双胞胎箱，观察另一只。",
     reveal: "推一只蓝箱，两只一起走。卡住一只，两只都停。",
-    success: "这单签收！还有一单。",
+    success: "第三课完成 · 双胞胎箱",
     map: [
       "########",
       "#......#",
@@ -68,7 +68,7 @@ const LEVELS = [
     pressedHint: "木门开了！兔子走开后，门会关上。",
     releasedHint: "试着把一只箱子推到压板上。",
     heldHint: "箱子压住了压板。把另一只箱子推过门。",
-    success: "两箱签收！下一单走传送带。",
+    success: "第四课完成 · 压板开门",
     map: [
       "########",
       "#...#..#",
@@ -86,7 +86,7 @@ const LEVELS = [
     firstMove: "right",
     hint: "先往右踩上绿色箭头。",
     reveal: "让弹跳箱刚好落在箭头上，传送带会再送一格。",
-    success: "两箱签收！下一单走传送门。",
+    success: "第五课完成 · 传送带",
     map: [
       "########",
       "#.s.>o.#",
@@ -113,7 +113,7 @@ const LEVELS = [
     firstMove: "left",
     hint: "先向左走一步，试试紫色传送门。",
     reveal: "兔子和箱子都能穿门。出口被占时，可以从上方绕过去。",
-    success: "签收！隔着一堵墙也能送到。",
+    success: "六课全部完成",
     map: [
       "########",
       "#......#",
